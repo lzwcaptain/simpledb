@@ -1,4 +1,6 @@
-use std::io::{stdin, stdout, Write};
+#[macro_use]
+extern crate text_io;
+
 use crate::input_buffer::InputBuffer;
 use crate::meta::do_mata_command;
 use crate::statement::Statement;
@@ -8,6 +10,7 @@ mod table;
 mod meta;
 mod input_buffer;
 mod errors;
+mod page;
 
 
 fn main() {
@@ -17,8 +20,8 @@ fn main() {
         input_buffer.read_input().expect("read error");
         if input_buffer.get_buffer().chars().nth(0).unwrap() == '.' {
             match do_mata_command(&input_buffer) {
-                Success => continue,
-                Unrecognized => {
+                _Success => continue,
+                _Unrecognized => {
                     println!("unrecognized");
                     continue;
                 }
@@ -26,11 +29,11 @@ fn main() {
         }
         let mut statement = Statement::default();
         match statement.prepare(&input_buffer).unwrap() {
-            Success => {
+            _Success => {
                 statement.execute_statement().expect("statement error");
                 println!("executed");
             }
-            Unrecognized => {
+            _Unrecognized => {
                 println!("unrecognize");
                 continue;
             }
